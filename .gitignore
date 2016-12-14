@@ -1,0 +1,5 @@
+# Java project ignore Settings
+
+.settings
+.settings/*
+
