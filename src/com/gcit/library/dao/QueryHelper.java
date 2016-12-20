@@ -50,16 +50,16 @@ public class QueryHelper {
 			   "FROM tbl_book_loans " +
 			   "INNER JOIN tbl_book " +
 			   "ON tbl_book.bookId = tbl_book_loans.bookId " +
-			   "WHERE tbl_book_loans.cardNo = ? AND tbl_book_loans.branchId = ? AND tbl_book_loans.dateIn IS NULL";
+			   "WHERE tbl_book_loans.cardNo = ? AND tbl_book_loans.branchId = ?";
 
 	// Get books not loaned from a branch.
-	public final static String ALL_BOOKS_NOT_LOANED_FROM_BRANCH = "SELECT tbl_book.title, tbl_book.bookId, tbl_library_branch.branchId " +
-			   "FROM tbl_book " +
+	public final static String ALL_BOOKS_NOT_LOANED_FROM_BRANCH = "SELECT b.* " +
+			   "FROM tbl_book b " +
 			   "INNER JOIN tbl_book_copies " +
-			   "ON tbl_book_copies.bookId = tbl_book.bookId " +
+			   "ON tbl_book_copies.bookId = b.bookId " +
 			   "INNER JOIN tbl_library_branch " +
 			   "ON tbl_library_branch.branchId = tbl_book_copies.branchId " +
-			   "WHERE tbl_book_copies.noOfCopies > 0 AND tbl_library_branch.branchId = ? AND tbl_book.bookId NOT IN ( " +
+			   "WHERE tbl_book_copies.noOfCopies > 0 AND tbl_library_branch.branchId = ? AND b.bookId NOT IN ( " +
 			   "SELECT bl.bookId " +
 			   "FROM tbl_book_loans bl " +
 			   "WHERE bl.cardNo = ?)";
@@ -68,6 +68,10 @@ public class QueryHelper {
 	public final static String ALL_BOOKS_FROM_PUBLISHER = "SELECT * " +
 														  "FROM tbl_book b" +
 														  "WHERE b.pubId = ?";
+	
+	// Get books with paging
+	public final static String BOOK_COUNT = "SELECT count(*) AS COUNT " + 
+										    "FROM tbl_author";
 
 	// Insert a book.
 	public final static String INSERT_BOOK = "INSERT INTO tbl_book " +
@@ -76,22 +80,29 @@ public class QueryHelper {
 
 	// Update a book.
 	public final static String UPDATE_BOOK = "UPDATE tbl_book b " +
-	        							"SET b.title = ? " +
-	        							"WHERE b.bookId = ?";
+	        								 "SET b.title = ?, b.pubId = ? " +
+	        								 "WHERE b.bookId = ?";
 
 	// Delete a book.
 	public final static String DELETE_BOOK = "DELETE FROM tbl_book b " +
 						               "WHERE b.bookId = ?";
 	
-	// Relate book with author.
+	// Relate book from author.
 	public final static String RELATE_BOOK_WITH_AUTHOR = "INSERT INTO tbl_book_authors " +
 														 "(bookId, authorId) " +
 														 "VALUES(?, ?)";
 	
-	// Relate book with author.
+	// Relate book from genre.
 	public final static String RELATE_BOOK_WITH_GENRE = "INSERT INTO tbl_book_genres " +
 														 "(bookId, genre_id) " +
 														 "VALUES(?, ?)";
+	// Unrelate book from author.
+	public final static String UNRELATE_BOOK_FROM_AUTHOR = "DELETE FROM tbl_book_authors " +
+														   "WHERE bookId = ? AND authorId = ?";
+	
+	// Unrelate book from author.
+	public final static String UNRELATE_BOOK_FROM_GENRE = "DELETE FROM tbl_book_genres " +
+														  "WHERE bookId = ? AND genre_id = ?";
 	
 	/*		
 	 * 2) Authors:
@@ -108,6 +119,11 @@ public class QueryHelper {
 	public final static String ALL_AUTHORS = "SELECT * " +
 									   "FROM tbl_author a";
 	
+	// Get query on authors.
+	public final static String ALL_AUTHORS_LIKE = "SELECT * " +
+												  "FROM tbl_author " +
+												  "WHERE authorName LIKE ?";
+	
 	// Getting an author with certain ID.
 	public final static String AUTHOR_WITH_ID = ALL_AUTHORS + " WHERE a.authorId = ?";
 	
@@ -123,13 +139,13 @@ public class QueryHelper {
 										 "VALUES(?)";
 	
 	// Delete an author.
-	public final static String DELETE_AUTHOR = "DELETE FROM tbl_author a " +
-						                 "WHERE a.authorId = ?";
+	public final static String DELETE_AUTHOR = "DELETE FROM tbl_author " +
+						                 	   "WHERE authorId = ?";
 	
 	// Update an author.
-	public final static String UPDATE_AUTHOR = "UPDATE tbl_author a " +
-	        							 "SET a.authorName = ? " +
-	        							 "WHERE a.authorId = ?";
+	public final static String UPDATE_AUTHOR = "UPDATE tbl_author " +
+	        							 	   "SET authorName = ? " +
+	        							       "WHERE authorId = ?";
 	/*
 	 * 3) Genres:
 	 * 		- SELECT ALL
@@ -179,7 +195,7 @@ public class QueryHelper {
 	
 	// Get all publishers.
 	public final static String ALL_PUBLISHERS = "SELECT * " +
-			   "FROM tbl_publisher";
+			   									"FROM tbl_publisher";
 
 	// Get a publisher with certain ID.
 	public final static String PUBLISHER_WITH_ID = "SELECT * " +
@@ -309,9 +325,14 @@ public class QueryHelper {
 			   								"FROM tbl_book_copies " +
 			   								"WHERE bookId = ? AND branchId = ?";
 
+    // Get all book copies in branch
+	public final static String ALL_COPIES_IN_BRANCH = "SELECT * " +
+			   										  "FROM tbl_book_copies " +
+			   										  "WHERE branchId = ?";
+
 	// Insert into copies.
 	public final static String INSERT_COPIES = "INSERT INTO tbl_book_copies " +
-			   "VALUES(?, ?, ?) ";
+			   								   "VALUES(?, ?, ?) ";
 
 	// Update copies' noOfCopies.
 	public final static String UPDATE_COPIES = "UPDATE tbl_book_copies " +

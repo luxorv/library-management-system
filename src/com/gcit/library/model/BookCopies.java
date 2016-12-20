@@ -66,7 +66,6 @@ public class BookCopies implements Serializable {
 		int result = 1;
 		result = prime * result + ((book == null) ? 0 : book.hashCode());
 		result = prime * result + ((branch == null) ? 0 : branch.hashCode());
-		result = prime * result + noOfCopies;
 		return result;
 	}
 
@@ -85,14 +84,12 @@ public class BookCopies implements Serializable {
 		if (book == null) {
 			if (other.book != null)
 				return false;
-		} else if (!book.equals(other.book))
+		} else if (book.getBookId() != other.book.getBookId())
 			return false;
 		if (branch == null) {
 			if (other.branch != null)
 				return false;
-		} else if (!branch.equals(other.branch))
-			return false;
-		if (noOfCopies != other.noOfCopies)
+		} else if (branch.getBranchId() != other.branch.getBranchId())
 			return false;
 		return true;
 	}

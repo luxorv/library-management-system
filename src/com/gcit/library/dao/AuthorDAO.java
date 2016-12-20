@@ -7,6 +7,24 @@ import java.util.ArrayList;
 import com.gcit.library.model.Author;
 
 public class AuthorDAO extends BaseDAO {
+	
+	public ArrayList<Author> queryAuthors(String searchString) {
+		if(searchString != null && !searchString.isEmpty()) {
+			searchString = "%"+searchString+"%";
+			
+			return super.getAll(
+				QueryHelper.ALL_AUTHORS_LIKE,
+				false,
+				new Object[]{searchString}
+			);
+		} else {
+			return super.getAll(
+				QueryHelper.ALL_AUTHORS,
+				false,
+				null
+			);
+		}
+	}
 
 	public Integer save(Author author) {
 		return super.alter(
@@ -18,8 +36,10 @@ public class AuthorDAO extends BaseDAO {
 	public void update(Author author) {
 		super.alter(
 			QueryHelper.UPDATE_AUTHOR,
-			new Object[]{author.getAuthorId()}
-		);
+			new Object[]{
+				author.getAuthorName(),
+				author.getAuthorId()
+			});
 	}
 	
 	public void delete(Author author) {

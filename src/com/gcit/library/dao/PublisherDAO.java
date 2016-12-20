@@ -11,8 +11,11 @@ public class PublisherDAO extends BaseDAO {
 	public Integer save(Publisher publisher) {
 		return super.alter(
 			QueryHelper.INSERT_PUBLISHER,
-			new Object[]{publisher.getPublisherName(), publisher.getPublisherAddress(), publisher.getPublisherPhone()}
-		);
+			new Object[]{
+				publisher.getPublisherName(),
+				publisher.getPublisherAddress(),
+				publisher.getPublisherPhone()
+		});
 	}
 	
 	public void update(Publisher publisher) {
@@ -45,6 +48,8 @@ public class PublisherDAO extends BaseDAO {
 				
 				publisher.setPublisherId(resultSet.getInt("publisherId"));
 				publisher.setPublisherName(resultSet.getString("publisherName"));
+				publisher.setPublisherAddress(resultSet.getString("publisherAddress"));
+				publisher.setPublisherPhone(resultSet.getString("publisherPhone"));
 
 				if(onlyBaseData) {
 					publisher.setBooks(bookDAO.getAll(

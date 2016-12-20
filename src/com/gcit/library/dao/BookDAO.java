@@ -14,15 +14,20 @@ public final class BookDAO extends BaseDAO {
 	public Integer save(Book book) {
 		return super.alter(
 			QueryHelper.INSERT_BOOK,
-			new Object[]{book.getTitle(), book.getPublisher().getPublisherId()}
-		);
+			new Object[]{
+				book.getTitle(),
+				book.getPublisher().getPublisherId()
+		});
 	}
 	
 	public void update(Book book) {
 		super.alter(
 			QueryHelper.UPDATE_BOOK,
-			new Object[]{book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId()}
-		);
+			new Object[]{
+				book.getTitle(),
+				book.getPublisher().getPublisherId(),
+				book.getBookId()
+		});
 	}
 	
 	public void delete(Book book) {
@@ -55,13 +60,13 @@ public final class BookDAO extends BaseDAO {
 				if(onlyBaseData) {
 					book.setAuthors(authorDAO.getAll(
 						QueryHelper.ALL_AUTHORS_FROM_BOOK,
-						!onlyBaseData,
+						false,
 						new Object[]{book.getBookId()}
 					));
 					
 					book.setGenres(genreDAO.getAll(
 						QueryHelper.ALL_GENRES_FROM_BOOK,
-						!onlyBaseData,
+						false,
 						new Object[]{book.getBookId()}
 					));
 				}
@@ -85,6 +90,23 @@ public final class BookDAO extends BaseDAO {
 		for (Genre genre : book.getGenres()) {
 			super.alter(
 				QueryHelper.RELATE_BOOK_WITH_GENRE,
+				new Object[]{book.getBookId(), genre.getGenreId()}
+			);
+		}
+	}
+	
+	public void unrelateBook(Book book) {
+		
+		for (Author author : book.getAuthors()) {
+			super.alter(
+				QueryHelper.UNRELATE_BOOK_FROM_AUTHOR,
+				new Object[]{book.getBookId(), author.getAuthorId()}
+			);
+		}
+		
+		for (Genre genre : book.getGenres()) {
+			super.alter(
+				QueryHelper.UNRELATE_BOOK_FROM_GENRE,
 				new Object[]{book.getBookId(), genre.getGenreId()}
 			);
 		}

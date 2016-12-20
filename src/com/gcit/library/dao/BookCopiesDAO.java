@@ -13,15 +13,21 @@ public class BookCopiesDAO extends BaseDAO {
 	public Integer save(BookCopies copies) {
 		return super.alter(
 			QueryHelper.INSERT_COPIES,
-			new Object[]{copies.getBook().getBookId(), copies.getBranch().getBranchId()}
-		);
+			new Object[]{
+				copies.getBook().getBookId(),
+				copies.getBranch().getBranchId(),
+				copies.getNoOfCopies()
+		});
 	}
 	
 	public void update(BookCopies copies) {
 		super.alter(
 			QueryHelper.UPDATE_COPIES,
-			new Object[]{copies.getNoOfCopies(), copies.getBook().getBookId(), copies.getBranch().getBranchId()}
-		);
+			new Object[]{
+				copies.getNoOfCopies(),
+				copies.getBook().getBookId(),
+				copies.getBranch().getBranchId()
+		});
 	}
 
 	@SuppressWarnings("unchecked")

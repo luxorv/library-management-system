@@ -19,8 +19,6 @@ public class DatabaseManager {
 				"root",
 				"test"
 		);
-		
-		connection.setAutoCommit(false);
 	}
 	
 	public static DatabaseManager getInstance() throws SQLException {
@@ -31,9 +29,7 @@ public class DatabaseManager {
 				System.out.println("Could not load driver");
 				e.printStackTrace();
 			}
-			
 			DatabaseManager.instance = new DatabaseManager();
-			
 		}
 		
 		return DatabaseManager.instance;
@@ -43,7 +39,6 @@ public class DatabaseManager {
 		try {
 			this.getCurrentConnection().close();
 		} catch (SQLException e) {
-			System.out.println("Cannot close connection");
 			e.printStackTrace();
 		}
 	}
@@ -52,7 +47,6 @@ public class DatabaseManager {
 		try {
 			this.connectToTheDatabse();
 		} catch (SQLException e) {
-			System.out.println("Could not connect");
 			e.printStackTrace();
 		}
 		return this.connection;

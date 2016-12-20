@@ -32,8 +32,7 @@ public class BookLoanDAO extends BaseDAO {
 				loan.getBook().getBookId(),
 				loan.getBranch().getBranchId(),
 				loan.getBorrower().getCardNo()
-			}
-		);
+		});
 	}
 	
 	public void delete(BookLoan loan) {
@@ -43,8 +42,7 @@ public class BookLoanDAO extends BaseDAO {
 				loan.getBook().getBookId(),
 				loan.getBranch().getBranchId(),
 				loan.getBorrower().getCardNo()
-			}
-		);
+		});
 	}
 
 	@SuppressWarnings("unchecked")
