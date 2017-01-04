@@ -19,8 +19,8 @@
     function fillTable(data) {
 
         if(data.alert !== null) {
+            $('#bookAlert').show();
             $('#bookAlert').html(data.alert)
-			$('#bookAlert').hide(2000);
 		}
 
         var pageNo = data.pageNo;
@@ -69,10 +69,10 @@
         var size = data.fetchSize;
         var pages = 1;
 
-        if(size % 10 > 1) {
-            pages = (size/10) + 1;
+        if(size % 10 > 0) {
+            pages = Math.floor(size/10) + 1;
         } else {
-            pages = size/10;
+            pages = Math.floor(size/10);
         }
 
         content += "<nav aria-label='Page navigation'>";
@@ -141,12 +141,13 @@
 		<div class="panel panel-default">
 			<!-- Default panel contents -->
 			<div class="panel-heading">
-				<div>
-					<br><h2 class="inline">Books</h2>
-					<div class="inline right input-group input-group-lg">
+				<div class="row">
+					<br><div class="col-md-6">
+						<h2 class="inline">Books</h2>
+					</div>
+					<br><div class="col-md-6 input-group input-group-lg">
 						<!-- <span class="input-group-addon" id="sizing-addon1"> -->
-						<div>
-							<div class="dropdown inline">
+							<div class="col-md-3 dropdown">
 								<button class="btn btn-default dropdown-toggle" type="button"
 										id="searchBy" data-toggle="dropdown" aria-haspopup="true"
 										aria-expanded="true">Search by <span class="caret"></span>
@@ -158,11 +159,10 @@
 									<li><a href="javascript:changePlaceholder('Publisher')">Publisher</a></li>
 								</ul>
 							</div>
-							<div class="inline">
+							<div class="col-md-9">
 								<input type="text" class="form-control" placeholder="Title"
-							   	name="searchString" id="searchInput" onkeydown="queryBooks(1)">
+							   	name="searchString" id="searchInput" onkeyup="queryBooks(1)">
 							</div>
-						</div>
 					</div>
 					</div><br><br>
 				</div>

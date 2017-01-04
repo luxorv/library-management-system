@@ -18,7 +18,8 @@
     function fillTable(data) {
 
         if(data.alert !== null) {
-            $('#authorAlert').html(data.alert)
+            $('#authorAlert').show();
+            $('#authorAlert').html(data.alert);
         }
 
         console.log(data);
@@ -61,10 +62,10 @@
         var size = data.fetchSize;
         var pages = 1;
 
-        if(size % 10 > 1) {
-            pages = (size/10) + 1;
+        if(size % 10 > 0) {
+            pages = Math.floor(size/10) + 1;
         } else {
-            pages = size/10;
+            pages = Math.floor(size/10);
         }
 
         content += "<nav aria-label='Page navigation'>";

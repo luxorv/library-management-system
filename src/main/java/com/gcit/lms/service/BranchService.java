@@ -57,11 +57,17 @@ public class BranchService {
 		return alert;
 	}
 
-	public void setAlert(String alert) {
-		if(alert.equals("Good")) {
-			this.alert = "";
-		} else if(alert.equals("Bad")) {
-			this.alert = "";
+	public void setAlert(String alertType) {
+
+		if(alertType.equals("Good")) {
+
+			this.alert = "<div class='alert alert-success alert-dismissible' role='alert'>" +
+					"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+					"<span aria-hidden='true'>&times;</span></button>" +
+					"Great! Operation successful </div>";
+
+		} else {
+			this.alert = null;
 		}
 	}
 

@@ -30,9 +30,13 @@ public class AuthorController {
     @Autowired
     BookService bookService;
 
+    private boolean hasOperated;
+
     @RequestMapping(value="/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String query(@RequestParam("q") String query, @RequestParam("pageNo") Integer pageNo) {
+
+        query = query.trim();
 
         ArrayList<Author> authors = authorService.getAllAuthors(query, pageNo);
         ArrayList<JSONObject> formattedAuthors = authorService.getAuthorsInfo(authors);
@@ -47,16 +51,16 @@ public class AuthorController {
             response.put("alert", authorService.getAlert());
         }
 
+        if(this.hasOperated) {
+            authorService.setAlert("");
+            this.hasOperated = false;
+        }
+
         return response.toString();
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(HttpServletRequest request, HttpServletResponse response) {
-
-        if(request.getParameter("redirected") == null) {
-            authorService.setAlert("");
-        }
-
         return "authors/list";
     }
 
@@ -90,8 +94,9 @@ public class AuthorController {
                 "Great! Author "+ authorName +" was added! </div>";
 
         authorService.setAlert(alert);
+        this.hasOperated = true;
 
-        return new RedirectView("/lms/authors?redirected=true");
+        return new RedirectView("/lms/authors");
     }
 
     @RequestMapping(value = "/update", method=RequestMethod.POST)
@@ -107,9 +112,11 @@ public class AuthorController {
                 "<span aria-hidden='true'>&times;</span></button>" +
                 "Great! Author "+ authorName +" was updated! </div>";
 
+        this.hasOperated = true;
+
         authorService.setAlert(alert);
 
-        return new RedirectView("/lms/authors?redirected=true");
+        return new RedirectView("/lms/authors");
     }
 
     private Author fillAuthor(String authorName, Integer authorId, String[] books) {
@@ -146,7 +153,8 @@ public class AuthorController {
                 "Great! Author "+ authorName +" was added! </div>";
 
         authorService.setAlert(alert);
+        this.hasOperated = true;
 
-        return new RedirectView("/lms/authors?redirected=true");
+        return new RedirectView("/lms/authors");
     }
 }

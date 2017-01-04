@@ -20,8 +20,8 @@
         console.log(data);
 
         if(data.alert !== null) {
-            $('#publisherAlert').html(data.alert)
-            $('#publisherAlert').hide(3000);
+            $('#publisherAlert').show();
+            $('#publisherAlert').html(data.alert);
         }
 
         console.log(data);
@@ -66,10 +66,10 @@
         var size = data.fetchSize;
         var pages = 1;
 
-        if(size % 10 > 1) {
-            pages = (size/10) + 1;
+        if(size % 10 > 0) {
+            pages = Math.floor(size/10) + 1;
         } else {
-            pages = size/10;
+            pages = Math.floor(size/10);
         }
 
         content += "<nav aria-label='Page navigation'>";
@@ -127,7 +127,7 @@
                 <h2 class="inline">Publishers</h2>
                 <div class="right input-group input-group-lg">
                     <input type="text" class="form-control" placeholder="Name"
-                           name="searchString" id="searchInput" onkeydown="queryPublishers(1)">
+                           name="searchString" id="searchInput" onkeyup="queryPublishers(1)">
                 </div>
             </div><br><br>
         </div>

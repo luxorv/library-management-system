@@ -33,8 +33,8 @@
                 dueDate: updatedDate
             }
         }).done(function (data) {
+            $('#operationAlert').show();
             $('#operationAlert').html(data);
-            $('#operationAlert').hide(3000);
         });
     }
 </script>
@@ -75,7 +75,7 @@
                         <input name="borrowerPhone" type="text" class="form-control" placeholder="Phone" value="${borrower.getPhone()}">
                     </li>
                     <c:if test="${loans != null && loans.size() > 0}">
-                    <li class="list-group-item"><h4>Loans: </h4>
+                    <li class="list-group-item"><h4>Loans: </h4><br>
                         <div id="operationAlert"></div>
                         <table class="table">
                             <tr>

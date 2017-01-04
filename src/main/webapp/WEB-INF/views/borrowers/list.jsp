@@ -19,8 +19,8 @@
         console.log(data);
 
         if(data.alert !== null) {
-            $('#borrowerAlert').html(data.alert)
-            $('#borrowerAlert').hide(3000);
+            $('#borrowerAlert').show();
+            $('#borrowerAlert').html(data.alert);
         }
 
         console.log(data);
@@ -47,10 +47,10 @@
         var size = data.fetchSize;
         var pages = 1;
 
-        if(size % 10 > 1) {
-            pages = (size/10) + 1;
+        if(size % 10 > 0) {
+            pages = Math.floor(size/10) + 1;
         } else {
-            pages = size/10;
+            pages = Math.floor(size/10);
         }
 
         content += "<nav aria-label='Page navigation'>";
@@ -97,7 +97,7 @@
                 <br><h2 class="inline">Borrowers</h2>
                 <div class="right input-group input-group-lg">
                     <input type="text" class="form-control" placeholder="Name"
-                           name="searchString" id="searchInput" onkeydown="queryBorrowers(1)">
+                           name="searchString" id="searchInput" onkeyup="queryBorrowers(1)">
                 </div>
             </div><br><br>
         </div>

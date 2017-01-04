@@ -103,17 +103,22 @@ public class BookService {
 	}
 
 	public void setAlert(String alertType) {
-		String newAlert = null;
 
 		if(alertType.equals("Good")) {
-			newAlert = "<div class='alert alert-success' role='alert'>Operation Successful</div>";
-		} else if(alertType.equals("Bad")) {
-			newAlert = "<div class='alert alert-danger' role='alert'>Cannot delete book with Loans</div>";
-		} else {
-			newAlert = null;
-		}
 
-		this.alert = newAlert;
+			this.alert = "<div class='alert alert-success alert-dismissible' role='alert'>" +
+					"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+					"<span aria-hidden='true'>&times;</span></button>" +
+					"Great! Operation successful </div>";
+
+		} else if(alertType.equals("Bad")) {
+			this.alert = "<div class='alert alert-danger alert-dismissible' role='alert'>" +
+					"<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+					"<span aria-hidden='true'>&times;</span></button>" +
+					"Ohh Snap! You can't delete a book with a loan! </div>";
+		} else {
+			this.alert = null;
+		}
 	}
 
 	public ArrayList<Book> getBooksNotInBranch(LibraryBranch branch) {

@@ -39,11 +39,15 @@ public class BookController {
 	@Autowired
 	BookLoanService loanService;
 
+	private boolean hasOperated;
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value= "/query", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public String query(@RequestParam("q") String query, @RequestParam("searchBy") String searchBy,
 						@RequestParam("pageNo") Integer pageNo) {
+
+		query = query.trim();
 
 		ArrayList<Book> books = bookService.getBooksBy(query, searchBy, pageNo);
 		ArrayList<JSONObject> formattedBooks = bookService.getBooksInfo(books);
@@ -58,16 +62,16 @@ public class BookController {
 			response.put("alert", bookService.getAlert());
 		}
 
+		if(this.hasOperated) {
+			bookService.setAlert("");
+			this.hasOperated = false;
+		}
+
 		return response.toString();
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(HttpServletRequest request, HttpServletResponse response) {
-
-		if(request.getParameter("redirected") == null) {
-			bookService.setAlert("");
-		}
-
 		return "books/list";
 	}
 
@@ -102,7 +106,9 @@ public class BookController {
 		bookService.createBook(book);
 		bookService.setAlert("Good");
 
-		return new RedirectView("/lms/books?redirected=true");
+		this.hasOperated = true;
+
+		return new RedirectView("/lms/books");
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -114,7 +120,9 @@ public class BookController {
 		bookService.updateBook(book);
 		bookService.setAlert("Good");
 
-		return new RedirectView("/lms/books?redirected=true");
+		this.hasOperated = true;
+
+		return new RedirectView("/lms/books");
 	}
 
 	private Book fillBook(String title, Integer bookId, String[] authors, String[] genres, Integer publisherId) {
@@ -166,6 +174,8 @@ public class BookController {
 			bookService.deleteBook(book);
 		}
 
-		return new RedirectView("/lms/books?redirected=true");
+		this.hasOperated = true;
+
+		return new RedirectView("/lms/books");
 	}
 }

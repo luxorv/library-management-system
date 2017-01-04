@@ -33,9 +33,13 @@ public class BorrowerController {
     @Autowired
     BookService bookService;
 
+    private boolean hasOperated;
+
     @RequestMapping(value = "/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String query(@RequestParam("q") String query, @RequestParam("pageNo") Integer pageNo) {
+
+        query = query.trim();
 
         ArrayList<Borrower> borrowers = borrowerService.getAllBorrowers(query, pageNo);
         ArrayList<JSONObject> formattedBorrowers = borrowerService.getBorrowersInfo(borrowers);
@@ -50,6 +54,11 @@ public class BorrowerController {
             response.put("alert", borrowerService.getAlert());
         }
 
+        if(this.hasOperated) {
+            bookService.setAlert("");
+            this.hasOperated = false;
+        }
+
         return response.toString();
     }
 
@@ -61,6 +70,9 @@ public class BorrowerController {
                              @RequestParam("cardNo") Integer cardNo,
                              @RequestParam("pageNo") Integer pageNo,
                              @RequestParam("pageNo1") Integer pageNo1) {
+
+        query = query.trim();
+        query1 = query1.trim();
 
         Borrower borrower = new Borrower();
         borrower.setCardNo(cardNo);
@@ -152,11 +164,6 @@ public class BorrowerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(HttpServletRequest request, HttpServletResponse response) {
-
-        if(request.getParameter("redirected") == null) {
-            borrowerService.setAlert("");
-        }
-
         return "borrowers/list";
     }
 
@@ -196,7 +203,9 @@ public class BorrowerController {
         borrowerService.createBorrower(borrower);
         borrowerService.setAlert("Good");
 
-        return new RedirectView("/lms/borrowers?redirected=true");
+        this.hasOperated = true;
+
+        return new RedirectView("/lms/borrowers");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -215,7 +224,9 @@ public class BorrowerController {
         borrowerService.updateBorrower(borrower);
         borrowerService.setAlert("Good");
 
-        return new RedirectView("/lms/borrowers?redirected=true");
+        this.hasOperated = true;
+
+        return new RedirectView("/lms/borrowers");
     }
 
     @RequestMapping(value = "/updateloan", method = RequestMethod.GET)
@@ -246,7 +257,12 @@ public class BorrowerController {
 
         loanService.updateLoan(loan);
 
-        return "<div class='alert alert-success' role='alert'>Operation Successful</div>";
+        String alert = "<div class='alert alert-success alert-dismissible' role='alert'>" +
+                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                "<span aria-hidden='true'>&times;</span></button>" +
+                "Great! loan's due date updated to "+loan.getDueDate().toString()+" </div>";
+
+        return alert;
     }
 
     private BookLoan fillBookLoan(Integer cardNo, Integer bookId, Integer branchId) {
@@ -294,6 +310,8 @@ public class BorrowerController {
         borrowerService.setAlert("Good");
         borrowerService.deleteBorrower(borrower);
 
-        return new RedirectView("/lms/borrowers?redirected=true");
+        this.hasOperated = true;
+
+        return new RedirectView("/lms/borrowers");
     }
 }

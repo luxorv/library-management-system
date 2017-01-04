@@ -22,9 +22,13 @@ public class PublisherController {
     @Autowired
     PublisherService publisherService;
 
+    private boolean hasOperated;
+
     @RequestMapping(value = "/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String query(@RequestParam("q") String query, @RequestParam("pageNo") Integer pageNo) {
+
+        query = query.trim();
 
         ArrayList<Publisher> publishers = publisherService.getAllPublishers(query, pageNo);
         ArrayList<JSONObject> formattedPublishers = publisherService.getPublishersInfo(publishers);
@@ -39,16 +43,16 @@ public class PublisherController {
             response.put("alert", publisherService.getAlert());
         }
 
+        if(this.hasOperated) {
+            publisherService.setAlert("");
+            this.hasOperated = false;
+        }
+
         return response.toString();
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(HttpServletRequest request, HttpServletResponse response) {
-
-        if(request.getParameter("redirected") == null) {
-            publisherService.setAlert("");
-        }
-
         return "publishers/list";
     }
 
@@ -82,6 +86,8 @@ public class PublisherController {
         publisherService.createPublisher(publisher);
         publisherService.setAlert("Good");
 
+        this.hasOperated = true;
+
         return new RedirectView("/lms/publishers?redirected=true");
     }
 
@@ -99,6 +105,8 @@ public class PublisherController {
 
         publisherService.updatePublisher(publisher);
         publisherService.setAlert("Good");
+
+        this.hasOperated = true;
 
         return new RedirectView("/lms/publishers?redirected=true");
     }
@@ -129,6 +137,8 @@ public class PublisherController {
 
         publisherService.setAlert("Good");
         publisherService.deletePublisher(publisher);
+
+        this.hasOperated = true;
 
         return new RedirectView("/lms/publishers?redirected=true");
     }

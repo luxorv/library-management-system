@@ -18,8 +18,8 @@
     function fillTable(data) {
 
         if(data.alert !== null) {
-            $('#branchAlert').html(data.alert)
-            $('#branchAlert').hide(2000);
+            $('#branchAlert').show();
+            $('#branchAlert').html(data.alert);
         }
 
         var pageNo = data.pageNo;
@@ -44,10 +44,10 @@
         var size = data.fetchSize;
         var pages = 1;
 
-        if(size % 10 > 1) {
-            pages = (size/10) + 1;
+        if(size % 10 > 0) {
+            pages = Math.floor(size/10) + 1;
         } else {
-            pages = size/10;
+            pages = Math.floor(size/10);
         }
 
         content += "<nav aria-label='Page navigation'>";
@@ -95,7 +95,7 @@
                 <div class="inline right input-group input-group-lg">
                     <!-- <span class="input-group-addon" id="sizing-addon1"> -->
                     <input type="text" class="form-control" placeholder="Branch Name"
-                           name="searchString" id="searchInput" onkeydown="queryBranches(1)">
+                           name="searchString" id="searchInput" onkeyup="queryBranches(1)">
                 </div>
             </div><br><br>
         </div>

@@ -23,9 +23,13 @@ public class BranchController {
     @Autowired
     BranchService branchService;
 
+    private boolean hasOperated;
+
     @RequestMapping(value = "/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String query(@RequestParam("q") String query, @RequestParam("pageNo") Integer pageNo) {
+
+        query = query.trim();
 
         ArrayList<LibraryBranch> branches = branchService.getAllBranches(query, pageNo);
         ArrayList<JSONObject> formattedBranches = branchService.getBranchesInfo(branches);
@@ -40,16 +44,16 @@ public class BranchController {
             response.put("alert", branchService.getAlert());
         }
 
+        if(this.hasOperated) {
+            branchService.setAlert("");
+            this.hasOperated = false;
+        }
+
         return response.toString();
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(HttpServletRequest request, HttpServletResponse response) {
-
-        if(request.getParameter("redirected") == null) {
-            branchService.setAlert("");
-        }
-
         return "branches/list";
     }
 
@@ -81,6 +85,8 @@ public class BranchController {
         branchService.createBranch(branch);
         branchService.setAlert("Good");
 
+        this.hasOperated = true;
+
         return new RedirectView("/lms/branches?redirected=true");
     }
 
@@ -93,6 +99,8 @@ public class BranchController {
 
         branchService.updateBranch(branch);
         branchService.setAlert("Good");
+
+        this.hasOperated = true;
 
         return new RedirectView("/lms/branches?redirected=true");
     }
@@ -118,6 +126,8 @@ public class BranchController {
 
         branchService.setAlert("Good");
         branchService.deleteBranch(branch);
+
+        this.hasOperated = true;
 
         return new RedirectView("/lms/branches?redirected=true");
     }

@@ -35,11 +35,15 @@ public class LibrarianController {
     @Autowired
     BookService bookService;
 
+    private boolean hasOperated;
+
     @RequestMapping(value = "/query", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public String query(@RequestParam("q") String query,
                         @RequestParam("branchId") Integer branchId,
                         @RequestParam("pageNo") Integer pageNo) {
+
+        query = query.trim();
 
         BookCopies copy = new BookCopies();
         LibraryBranch branch = new LibraryBranch();
@@ -58,6 +62,11 @@ public class LibrarianController {
 
         if(copiesService.getAlert() != null) {
             response.put("alert", copiesService.getAlert());
+        }
+
+        if(this.hasOperated) {
+            copiesService.setAlert("");
+            this.hasOperated = false;
         }
 
         return response.toString();
@@ -108,6 +117,8 @@ public class LibrarianController {
 
         copiesService.createCopies(copy);
 
+        this.hasOperated = true;
+
         copiesService.setAlert("Good");
 
         return new RedirectView("/lms/librarian");
@@ -123,6 +134,8 @@ public class LibrarianController {
         copiesService.updateCopies(copy);
 
         copiesService.setAlert("Good");
+
+        this.hasOperated = true;
 
         return new RedirectView("/lms/librarian");
     }

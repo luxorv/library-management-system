@@ -23,6 +23,9 @@
             if(data.cardNotValidAlert) {
                 console.log(data.cardNotValidAlert);
                 $('#cardAlert').html(data.cardNotValidAlert);
+                $('#loanPanel').hide();
+                $('#spaceDiv').hide();
+                $('#bookPanel').hide();
                 return;
             }
 
@@ -33,19 +36,17 @@
             var books = data.books;
             var loans = data.loans;
 
-            $('#loansTable').show();
-            $('#booksTable').show();
-            $('#loanHeader').show();
-            $('#bookHeader').show();
+            $('#loanPanel').show();
+            $('#spaceDiv').show();
+            $('#bookPanel').show();
 
             if(!books || books.length === 0) {
-                $('#booksTable').hide();
-                $('#bookHeader').hide();
+                $('#bookPanel').hide();
             }
 
             if(!loans || loans.length === 0) {
-                $('#loansTable').hide();
-                $('#loanHeader').hide();
+                $('#loanPanel').hide();
+                $('#spaceDiv').hide();
             }
 
             $('#hiddenCardNo').val(data.cardNo);
@@ -105,8 +106,8 @@
             loanContent += "</tr>";
 
             for(var i=0;i<loans.length;i++) {
-                loanContent += "<tr>";
 
+                loanContent += "<tr>";
                 loanContent += "<td>"+loans[i].book.title+"</td>";
                 loanContent += "<td>"+loans[i].dueDate+"</td>";
                 loanContent += "<td><a href='#' class='btn btn-primary active'";
@@ -128,7 +129,7 @@
                 bookId: bookId
             }
         }).done(function (data) {
-            $('#loanOperationAlert').html(data);
+            $('#loanAlert').html(data);
             queryBookLoans(1, 1);
         });
     }
@@ -142,13 +143,19 @@
                 bookId: bookId
             }
         }).done(function (data) {
-            $('#loanOperationAlert').html(data);
+            $('#returnAlert').html(data);
             queryBookLoans(1, 1);
         });
     }
 
+    $( document ).ready(function() {
+        $('#loanPanel').hide();
+        $('#bookPanel').hide();
+    });
+
 </script>
 <div class="container" style="min-width: 80%;" role="main">
+    <div class="row">
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Enter your Info</h3>
@@ -156,7 +163,7 @@
         <div class="panel-body">
             <div id="cardAlert"></div>
             <div class="row">
-                <div class="col-sm-3"><label>Branch: </label>
+                <div class="col-sm-3">
                     <select onchange="queryBookLoans(1, 1)" name="branchId" class="selectpicker" data-live-search="true">
                         <c:forEach var="branch" items="${branches}">
                             <option value="${branch.getBranchId()}">${branch.getBranchName()} </option>
@@ -173,22 +180,28 @@
             </div>
         </div>
     </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Loans and Books</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div id="loanOperationAlert"></div>
-                <div id="loanHeader" class="col-md-4"><h4>Loans</h4></div>
-                <div id="bookHeader" class="col-md-8"><h4>Books</h4></div>
+    </div>
+    <div class="row">
+        <div id="loanPanel" class="col-md-4 panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Loans</h3>
             </div>
+            <div class="panel-body">
+                <div id="loanAlert"></div>
+            </div>
+            <div id="loansTable"></div>
         </div>
-        <hr>
-        <div class="row">
-            <div id="loansTable" class="col-md-4"></div>
-            <div id="booksTable" class="col-md-8"></div>
+
+        <div id="spaceDiv" class="col-md-1"></div>
+
+        <div id="bookPanel" class="col-md-7 panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Books</h3>
+            </div>
+            <div class="panel-body">
+                <div id="returnAlert"></div>
+            </div>
+            <div id="booksTable"></div>
         </div>
     </div>
 </div>
